@@ -22,9 +22,11 @@ public class MainView extends UI {
 
     private HorizontalLayout dashboard;
 
-    private Label location;
+    private Label location, currentTemp;
 
-    private Label currentTemp;
+    private HorizontalLayout mainDescriptionLayout;
+
+    private Label weatherDescription, maxDegree, minDegree, humidity, pressure, wind, realFeel;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -34,6 +36,7 @@ public class MainView extends UI {
         setLogo();
         setForm();
         dashboardTitle();
+        dashboardDetails();
     }
 
     private void mainLayout() {
@@ -116,5 +119,49 @@ public class MainView extends UI {
 
         dashboard.addComponents(location, currentTemp);
         mainLayout.addComponent(dashboard);
+    }
+
+    private void dashboardDetails(){
+        mainDescriptionLayout = new HorizontalLayout();
+        mainDescriptionLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+
+        // description layout
+        VerticalLayout descriptionLayout = new VerticalLayout();
+        descriptionLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+
+        // description for Weather
+        weatherDescription = new Label("Description: Clear");
+        weatherDescription.setStyleName(ValoTheme.LABEL_SUCCESS);
+
+        descriptionLayout.addComponent(weatherDescription);
+
+        // Minimum Temperature
+        minDegree = new Label("Min: 29");
+        descriptionLayout.addComponents(minDegree);
+
+        // Maximum Temperature
+        maxDegree = new Label("Max: 71");
+        descriptionLayout.addComponents(maxDegree);
+
+        // Pressure
+        VerticalLayout pressureLayout = new VerticalLayout();
+        pressureLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+
+        pressure = new Label("Pressure: 240 Fa");
+        pressureLayout.addComponent(pressure);
+
+        // Humidity
+        humidity = new Label("Humidity: 20");
+        pressureLayout.addComponent(humidity);
+
+        // Wind
+        wind = new Label("Wind: 231");
+        pressureLayout.addComponent(wind);
+
+        // Real Feel
+        realFeel = new Label("Real Feel: 231");
+        pressureLayout.addComponent(realFeel);
+
+        mainLayout.addComponents(mainDescriptionLayout, pressureLayout);
     }
 }
