@@ -5,6 +5,7 @@ import com.vaadin.server.ClassResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,12 @@ public class MainView extends UI {
 
     private Button searchButton;
 
+    private HorizontalLayout dashboard;
+
+    private Label location;
+
+    private Label currentTemp;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
@@ -26,6 +33,7 @@ public class MainView extends UI {
         setHeader();
         setLogo();
         setForm();
+        dashboardTitle();
     }
 
     private void mainLayout() {
@@ -55,8 +63,8 @@ public class MainView extends UI {
         logo.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
         Image img = new Image(null, new ClassResource("/weatherLogo.jpg"));
-        logo.setWidth("240px");
-        logo.setHeight("240px");
+        logo.setWidth("308px");
+        logo.setHeight("164px");
 
         logo.addComponent(img);
         mainLayout.addComponent(logo);
@@ -90,5 +98,23 @@ public class MainView extends UI {
         formLayout.addComponent(searchButton);
 
         mainLayout.addComponent(formLayout);
+    }
+
+    private void dashboardTitle(){
+        dashboard = new HorizontalLayout();
+        dashboard.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+
+        // city location
+        location = new Label("Currently, in Poznan");
+        location.addStyleName(ValoTheme.LABEL_H2);
+        location.addStyleName(ValoTheme.LABEL_LIGHT);
+
+         // current TEMP
+        currentTemp = new Label("10C");
+        currentTemp.setStyleName(ValoTheme.LABEL_BOLD);
+        currentTemp.setStyleName(ValoTheme.LABEL_H1);
+
+        dashboard.addComponents(location, currentTemp);
+        mainLayout.addComponent(dashboard);
     }
 }
