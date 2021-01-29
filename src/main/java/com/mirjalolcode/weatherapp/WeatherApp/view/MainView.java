@@ -150,18 +150,16 @@ public class MainView extends UI {
         pressure = new Label("Pressure: 240 Fa");
         pressureLayout.addComponent(pressure);
 
-        // Humidity
         humidity = new Label("Humidity: 20");
         pressureLayout.addComponent(humidity);
 
-        // Wind
         wind = new Label("Wind: 231");
         pressureLayout.addComponent(wind);
 
-        // Real Feel
         realFeel = new Label("Real Feel: 231");
         pressureLayout.addComponent(realFeel);
 
+        mainDescriptionLayout.addComponents(descriptionLayout, pressureLayout);
         mainLayout.addComponents(mainDescriptionLayout, pressureLayout);
     }
 }
