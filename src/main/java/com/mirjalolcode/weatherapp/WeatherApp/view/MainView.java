@@ -3,10 +3,12 @@ package com.mirjalolcode.weatherapp.WeatherApp.view;
 import com.mirjalolcode.weatherapp.WeatherApp.controller.WeatherService;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ClassResource;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,8 @@ public class MainView extends UI {
 
     private Label weatherDescription, tempMax, tempMin, humidity, pressure, wind, feelsLike;
 
+    private Image iconImage;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
@@ -58,6 +62,8 @@ public class MainView extends UI {
     }
 
     private void mainLayout() {
+        iconImage = new Image();
+
         mainLayout = new VerticalLayout();
 
         mainLayout.setWidth("100%");
@@ -135,8 +141,7 @@ public class MainView extends UI {
         currentTemp.setStyleName(ValoTheme.LABEL_BOLD);
         currentTemp.setStyleName(ValoTheme.LABEL_H1);
 
-        dashboard.addComponents(location, currentTemp);
-        mainLayout.addComponent(dashboard);
+        dashboard.addComponents(location, iconImage, currentTemp);
     }
 
     private void dashboardDetails(){
@@ -178,7 +183,6 @@ public class MainView extends UI {
         pressureLayout.addComponent(feelsLike);
 
         mainDescriptionLayout.addComponents(descriptionLayout, pressureLayout);
-        mainLayout.addComponents(mainDescriptionLayout, pressureLayout);
     }
 
     private void updateUI() throws JSONException {
@@ -203,5 +207,20 @@ public class MainView extends UI {
         JSONObject mainObject = weatherService.returnMain();
         int temp = mainObject.getInt("temp");
         currentTemp.setValue(temp + defaultUnit);
+
+        // getting icon from API
+        String iconCode=null;
+        String weatherDescriptionNew = null;
+        JSONArray jsonArray = weatherService.returnWeatherArray();
+
+        for (int i = 0; i < jsonArray.length(); i++){
+            JSONObject weatherObj = jsonArray.getJSONObject(i);
+            iconCode = weatherObj.getString("icon");
+            weatherDescriptionNew = weatherObj.getString("description");
+        }
+
+        iconImage.setSource(new ExternalResource("http://openweathermap.org/img/wn/"+iconCode+"@2x.png"));
+
+        mainLayout.addComponents(dashboard, mainDescriptionLayout);
     }
 }
