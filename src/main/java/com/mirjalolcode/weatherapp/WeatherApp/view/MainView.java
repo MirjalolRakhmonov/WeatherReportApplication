@@ -1,6 +1,6 @@
 package com.mirjalolcode.weatherapp.WeatherApp.view;
 
-import com.mirjalolcode.weatherapp.WeatherApp.controller.WeatherService;
+import com.mirjalolcode.weatherapp.WeatherApp.service.WeatherService;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.ExternalResource;
@@ -31,11 +31,9 @@ public class MainView extends UI {
 
     private HorizontalLayout dashboard;
 
-    private Label location, currentTemp;
+    private Label location, currentTemp, weatherDescription, tempMax, tempMin, humidity, pressure, wind, feelsLike;
 
     private HorizontalLayout mainDescriptionLayout;
-
-    private Label weatherDescription, tempMax, tempMin, humidity, pressure, wind, feelsLike;
 
     private Image iconImage;
 
@@ -137,7 +135,7 @@ public class MainView extends UI {
         location.addStyleName(ValoTheme.LABEL_LIGHT);
 
          // current TEMP
-        currentTemp = new Label("10C");
+        currentTemp = new Label();
         currentTemp.setStyleName(ValoTheme.LABEL_BOLD);
         currentTemp.setStyleName(ValoTheme.LABEL_H1);
 
@@ -153,33 +151,33 @@ public class MainView extends UI {
         descriptionLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
         // description for Weather
-        weatherDescription = new Label("Description: Clear");
+        weatherDescription = new Label();
         weatherDescription.setStyleName(ValoTheme.LABEL_SUCCESS);
 
         descriptionLayout.addComponent(weatherDescription);
 
         // Minimum Temperature
-        tempMin = new Label("Min: 29");
+        tempMin = new Label();
         descriptionLayout.addComponents(tempMin);
 
         // Maximum Temperature
-        tempMax = new Label("Max: 71");
+        tempMax = new Label();
         descriptionLayout.addComponents(tempMax);
 
         // Pressure
         VerticalLayout pressureLayout = new VerticalLayout();
         pressureLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
-        pressure = new Label("Pressure: 240 Fa");
+        pressure = new Label();
         pressureLayout.addComponent(pressure);
 
-        humidity = new Label("Humidity: 20");
+        humidity = new Label();
         pressureLayout.addComponent(humidity);
 
-        wind = new Label("Wind: 231");
+        wind = new Label();
         pressureLayout.addComponent(wind);
 
-        feelsLike = new Label("Real Feel: 231");
+        feelsLike = new Label();
         pressureLayout.addComponent(feelsLike);
 
         mainDescriptionLayout.addComponents(descriptionLayout, pressureLayout);
@@ -194,13 +192,13 @@ public class MainView extends UI {
             weatherService.setUnit("imperials");
             unitSelect.setValue("C");
 
-            defaultUnit = "\u00b0"+"F";
+            defaultUnit = "\u00b0"+" F";
         }
         else {
             weatherService.setUnit("metric");
             unitSelect.setValue("C");
 
-            defaultUnit = "\u00b0"+"C";
+            defaultUnit = "\u00b0"+" C";
         }
 
         location.setValue("Currently in "+city);
@@ -220,6 +218,14 @@ public class MainView extends UI {
         }
 
         iconImage.setSource(new ExternalResource("http://openweathermap.org/img/wn/"+iconCode+"@2x.png"));
+
+        weatherDescription.setValue("Description: "+weatherDescriptionNew);
+        tempMin.setValue("Minimum Temperature: "+weatherService.returnMain().getInt("temp_min")+unitSelect.getValue());
+        tempMax.setValue("Maximum Temperature: "+weatherService.returnMain().getInt("temp_max")+unitSelect.getValue());
+        pressure.setValue("Pressure: "+weatherService.returnMain().getInt("pressure")+unitSelect.getValue());
+        humidity.setValue("Humidity: "+weatherService.returnMain().getInt("humidity")+unitSelect.getValue());
+        wind.setValue("Wind speed: "+weatherService.returnWind().getInt("speed"));
+        feelsLike.setValue("Real Feel: "+weatherService.returnMain().getDouble("feels_like"));
 
         mainLayout.addComponents(dashboard, mainDescriptionLayout);
     }

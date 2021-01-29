@@ -1,4 +1,4 @@
-package com.mirjalolcode.weatherapp.WeatherApp.controller;
+package com.mirjalolcode.weatherapp.WeatherApp.service;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
