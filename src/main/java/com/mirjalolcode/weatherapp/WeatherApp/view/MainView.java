@@ -1,14 +1,23 @@
 package com.mirjalolcode.weatherapp.WeatherApp.view;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 
+import java.util.ArrayList;
+
 @SpringUI(path = "")
 public class MainView extends UI {
 
     private VerticalLayout mainLayout;
+
+    private NativeSelect<String> unitSelect;
+
+    private TextField cityTextField;
+
+    private Button searchButton;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -16,6 +25,7 @@ public class MainView extends UI {
         mainLayout();
         setHeader();
         setLogo();
+        setForm();
     }
 
     private void mainLayout() {
@@ -50,5 +60,35 @@ public class MainView extends UI {
 
         logo.addComponent(img);
         mainLayout.addComponent(logo);
+    }
+
+    private void setForm(){
+        HorizontalLayout formLayout= new HorizontalLayout();
+        formLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        formLayout.setSpacing(true);
+        formLayout.setMargin(true);
+
+        // Component Selection
+        unitSelect = new NativeSelect<>();
+        ArrayList<String> items = new ArrayList<>();
+        items.add("C");
+        items.add("F");
+
+        unitSelect.setItems(items);
+        unitSelect.setValue(items.get(0));
+
+        formLayout.addComponent(unitSelect);
+
+        // cityTextField
+        cityTextField = new TextField();
+        cityTextField.setWidth("85%");
+        formLayout.addComponent(cityTextField);
+
+        // Search Button
+        searchButton = new Button();
+        searchButton.setIcon(VaadinIcons.SEARCH);
+        formLayout.addComponent(searchButton);
+
+        mainLayout.addComponent(formLayout);
     }
 }
