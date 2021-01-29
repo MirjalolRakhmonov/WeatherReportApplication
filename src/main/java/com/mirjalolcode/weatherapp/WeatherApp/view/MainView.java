@@ -1,5 +1,6 @@
 package com.mirjalolcode.weatherapp.WeatherApp.view;
 
+import com.mirjalolcode.weatherapp.WeatherApp.controller.WeatherService;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.VaadinRequest;
@@ -7,11 +8,16 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
 @SpringUI(path = "")
 public class MainView extends UI {
+
+    @Autowired
+    private WeatherService weatherService;
 
     private VerticalLayout mainLayout;
 
@@ -27,7 +33,7 @@ public class MainView extends UI {
 
     private HorizontalLayout mainDescriptionLayout;
 
-    private Label weatherDescription, maxDegree, minDegree, humidity, pressure, wind, realFeel;
+    private Label weatherDescription, tempMax, tempMin, humidity, pressure, wind, feelsLike;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -40,7 +46,11 @@ public class MainView extends UI {
         dashboardDetails();
         searchButton.addClickListener(clickEvent -> {
             if (!cityTextField.getValue().equals("")){
-                updateUI();
+                try {
+                    updateUI();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             else
                 Notification.show("City Name is required");
@@ -144,12 +154,12 @@ public class MainView extends UI {
         descriptionLayout.addComponent(weatherDescription);
 
         // Minimum Temperature
-        minDegree = new Label("Min: 29");
-        descriptionLayout.addComponents(minDegree);
+        tempMin = new Label("Min: 29");
+        descriptionLayout.addComponents(tempMin);
 
         // Maximum Temperature
-        maxDegree = new Label("Max: 71");
-        descriptionLayout.addComponents(maxDegree);
+        tempMax = new Label("Max: 71");
+        descriptionLayout.addComponents(tempMax);
 
         // Pressure
         VerticalLayout pressureLayout = new VerticalLayout();
@@ -164,14 +174,34 @@ public class MainView extends UI {
         wind = new Label("Wind: 231");
         pressureLayout.addComponent(wind);
 
-        realFeel = new Label("Real Feel: 231");
-        pressureLayout.addComponent(realFeel);
+        feelsLike = new Label("Real Feel: 231");
+        pressureLayout.addComponent(feelsLike);
 
         mainDescriptionLayout.addComponents(descriptionLayout, pressureLayout);
         mainLayout.addComponents(mainDescriptionLayout, pressureLayout);
     }
 
-    private void updateUI(){
+    private void updateUI() throws JSONException {
+        String city = cityTextField.getValue();
+        String defaultUnit;
+        weatherService.setCityName(city);
 
+        if(unitSelect.getValue().equals("F")){
+            weatherService.setUnit("imperials");
+            unitSelect.setValue("C");
+
+            defaultUnit = "\u00b0"+"F";
+        }
+        else {
+            weatherService.setUnit("metric");
+            unitSelect.setValue("C");
+
+            defaultUnit = "\u00b0"+"C";
+        }
+
+        location.setValue("Currently in "+city);
+        JSONObject mainObject = weatherService.returnMain();
+        int temp = mainObject.getInt("temp");
+        currentTemp.setValue(temp + defaultUnit);
     }
 }
