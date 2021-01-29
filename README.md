@@ -3,3 +3,4 @@ Web Application which integrates and shows results from OpenWeatherMaps API. VAA
 Here is a list of public APIs where you can choose one of them:
 # https://github.com/public-apis/public-apis#weather
 In this Project, I chose OpenWeatherMap API.
+Some of APIs require api key, in that case, you need to sign up and get api key.
