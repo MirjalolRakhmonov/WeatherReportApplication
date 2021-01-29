@@ -6,6 +6,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,13 @@ public class MainView extends UI {
         setForm();
         dashboardTitle();
         dashboardDetails();
+        searchButton.addClickListener(clickEvent -> {
+            if (!cityTextField.getValue().equals("")){
+                updateUI();
+            }
+            else
+                Notification.show("City Name is required");
+        });
     }
 
     private void mainLayout() {
@@ -161,5 +169,9 @@ public class MainView extends UI {
 
         mainDescriptionLayout.addComponents(descriptionLayout, pressureLayout);
         mainLayout.addComponents(mainDescriptionLayout, pressureLayout);
+    }
+
+    private void updateUI(){
+
     }
 }
